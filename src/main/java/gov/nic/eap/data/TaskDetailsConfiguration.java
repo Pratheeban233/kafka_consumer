@@ -36,6 +36,5 @@ public class TaskDetailsConfiguration {
 		private List<Map<String, Object>> response;
 		private LinkedHashMap<Integer, Object> queryParams = new LinkedHashMap<>();
 		private List<LinkedHashMap<Integer, Object>> listOfQueryParams = new ArrayList<>();
-
 	}
 }
