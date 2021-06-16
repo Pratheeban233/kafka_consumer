@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+
+kafka:
+  consumer:
+    topic_mail: eap_mail
+    topic_sms: eap_sms
+    bootstrapservers: localhost:9092,localhost:9093,localhost:9094
+    groupid: coal_auction
+
+spring:
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/eapeauc_1405
+    username: postgres
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 50
+      max-lifetime: 1200000
+      auto-commit: true
+  profiles:
+    active: "JobConfig"
+
+logging:
+  level:
+    gov.nic.eap: TRACE
+    org.springframework.jdbc.core: TRACE

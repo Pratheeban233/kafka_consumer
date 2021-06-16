@@ -1,0 +1,21 @@
+schedule:
+  jobConfigs:
+    mail:
+      Config:
+      method: mail
+      updatequery: UPDATE public.eap_mail_sender SET processid = ?, isexecuted = ?, executeddate =? WHERE id = ?;
+      updateinputs:
+        processid: INTEGER
+        isexecuted: BOOLEAN
+        executeddate: TIMESTAMP
+        id: INTEGER
+
+    sms:
+      Config:
+      method: sms
+      updatequery: UPDATE public.eap_sms_sender SET processid = ?, isexecuted = ?, executeddate =? WHERE id = ?;
+      updateinputs:
+        processid: INTEGER
+        isexecuted: BOOLEAN
+        executeddate: TIMESTAMP
+        id: INTEGER
