@@ -1,12 +1,13 @@
 package gov.nic.eap.data;
 
-import gov.nic.eap.util.RRSMap;
-import lombok.Data;
+import java.util.*;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import gov.nic.eap.util.RRSMap;
+import lombok.Data;
 
 @Configuration
 @ConfigurationProperties("schedule")
@@ -23,15 +24,13 @@ public class TaskDetailsConfiguration {
 	@Data
 	@Component
 	public static class Config {
-		private String method;
 		private String cron;
 		private String query;
 		private Map<String, String> inputs;
-		private String updatequery;
-		private Map<String, String> updateinputs;
+		private String updateQuery;
+		private Map<String, String> updateInputs;
 		private String targetType;
 		private Map<String, String> targetInputs;
-		private String bindedQuery;
 		private boolean requestValidation;
 		private List<Map<String, Object>> response;
 		private LinkedHashMap<Integer, Object> queryParams = new LinkedHashMap<>();
