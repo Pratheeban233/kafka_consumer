@@ -31,55 +31,36 @@ public class RrsRequestValidator {
 		this.rsConfig.setRequestValidation(false);
 	}
 	public Config requestParamsValidation() throws Exception {
-		if (rsConfig.getMethod().equals(this.requestKey)) {
 			Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getInputs());
 			if (optParams.isPresent()) {
-				// Map<String, String> params = optParams.get();
 				Map<String, String> params = new HashMap<>();
 				params.putAll(rsConfig.getInputs());
-				// params.values().removeAll(Collections.singleton("TOKEN"));
-				// Check for All Mandatory Fields
 				if (params.keySet().equals(allRequestParams.keySet())) {
-
-					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getInputs(), allRequestParams/*, token*/);
+					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getInputs(), allRequestParams);
 				} else {
 					rsConfig.setResponse(CommonConstant.mandatoryList);
 					rsConfig.setRequestValidation(false);
 				}
 			} else {
-				rsConfig.setBindedQuery(rsConfig.getQuery());
 				rsConfig.setRequestValidation(true);
 			}
-		} else {
-			rsConfig.setRequestValidation(false);
-		}
 		return rsConfig;
 	}
 
 	public Config updateRequestParamsValidation() throws Exception {
-		if (rsConfig.getMethod().equals(this.requestKey)) {
-			Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getUpdateinputs());
+			Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getUpdateInputs());
 			if (optParams.isPresent()) {
-				// Map<String, String> params = optParams.get();
 				Map<String, String> params = new HashMap<>();
-				params.putAll(rsConfig.getUpdateinputs());
-//					params.values ().removeAll (Collections.singleton ("TOKEN"));
-				// Check for All Mandatory Fields
+				params.putAll(rsConfig.getUpdateInputs());
 				if (params.keySet().equals(allRequestParams.keySet())) {
-
-					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getUpdateinputs(), allRequestParams/*, token*/);
+					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getUpdateInputs(), allRequestParams);
 				} else {
 					rsConfig.setResponse(CommonConstant.mandatoryList);
 					rsConfig.setRequestValidation(false);
 				}
 			} else {
-				rsConfig.setBindedQuery(rsConfig.getQuery());
 				rsConfig.setRequestValidation(true);
 			}
-		} else {
-			rsConfig.setRequestValidation(false);
-		}
-
 		return rsConfig;
 	}
 }

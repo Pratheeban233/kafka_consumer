@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import gov.nic.eap.model.MailSender;
+import gov.nic.eap.model.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@SuppressWarnings("unchecked")
 public class MessageQueueIngester implements Ingester {
 
 	public static final String MAIL = "mail";
@@ -40,17 +43,21 @@ public class MessageQueueIngester implements Ingester {
 
 		List<?> listofmaps = new ObjectMapper().readValue(message, new TypeReference<List<?>>() {
 		});
+
+
 		if (message.contains("mailid")) {
 			log.debug("listOfmails : {}", listofmaps);
-			updateprocessedRecords(MAIL, (List<Map<String, Object>>) listofmaps);
+			System.out.println ("MAILS : " +Arrays.asList (new ObjectMapper ().readValue (message, MailSender[].class)));
+			updateProcessedRecords (MAIL, (List<Map<String, Object>>) listofmaps);
 		}
 		if (message.contains("smsid")) {
 			log.debug("listOfsms : {}", listofmaps);
-			updateprocessedRecords(SMS, (List<Map<String, Object>>) listofmaps);
+			System.out.println ("SMS : "+Arrays.asList (new ObjectMapper ().readValue (message, SmsSender[].class)));
+			updateProcessedRecords (SMS, (List<Map<String, Object>>) listofmaps);
 		}
 	}
 
-	public List<Map<String, Object>> updateprocessedRecords(String key, List<Map<String, Object>> message) throws Exception {
+	public List<Map<String, Object>> updateProcessedRecords(String key, List<Map<String, Object>> message) throws Exception {
 		int noOfUpdatedRecords = 0;
 		Map<String, String> allRequestParams = new HashMap<>();
 		Optional<TaskDetailsConfiguration.Config> configOptional = taskDetailsConfiguration.getJobConfigs(key);
@@ -66,12 +73,12 @@ public class MessageQueueIngester implements Ingester {
 						noOfUpdatedRecords = getRrsRequestValidator(key, message, allRequestParams, config, noOfUpdatedRecords);
 					}
 					log.info(noOfUpdatedRecords + " : " + key + " Record's Updated.");
-				}
+				}else
 				return CommonConstant.invalidList;
-			}
+			}else
 			return CommonConstant.queryList;
 		}
-		return CommonConstant.invalidList;
+		return CommonConstant.mandatoryList;
 	}
 
 	private int getRrsRequestValidator(String key, List<Map<String, Object>> message, Map<String, String> allRequestParams,
@@ -80,7 +87,7 @@ public class MessageQueueIngester implements Ingester {
 		RrsRequestValidator requestValidator = new RrsRequestValidator(key, config, rrsDBQuery, allRequestParams);
 		config = requestValidator.updateRequestParamsValidation();
 		if (config.isRequestValidation() && Objects.nonNull(message)) {
-			updateResult = jdbcConnectionUtil.getResultSets(config.getUpdatequery(), config.getQueryParams());
+			updateResult = jdbcConnectionUtil.getResultSets(config.getUpdateQuery(), config.getQueryParams());
 			for (Map<String, Object> result : updateResult) {
 				if (result.get("No. of Records Affected").equals(1)) {
 					noOfUpdatedRecords++;
