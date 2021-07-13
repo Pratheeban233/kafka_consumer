@@ -7,7 +7,7 @@ kafka:
     topic_mail: eap_mail
     topic_sms: eap_sms
     bootstrapservers: localhost:9092,localhost:9093,localhost:9094
-    groupid: coal_auction
+    groupid: eap_notifications
 
 spring:
   datasource:

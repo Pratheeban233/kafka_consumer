@@ -1,6 +1,8 @@
 package gov.nic.eap.service.Implementation;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,6 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,9 @@ public class MailServiceImpl {
 
 	private MailSettingsRepository mailSettingsRepository;
 
-	public int mailProcess(List<MailSender> mailSenderList,int count) {
+	public int mailProcess(List<MailSender> mailSenderList, int count) {
 		if (Util.isListNotNullOrEmpty(mailSenderList)) {
-			for(MailSender mail:mailSenderList){
+			for (MailSender mail : mailSenderList) {
 				Optional<MailSender> optionalMailSender = mailSenderRepository.findById(mail.getId());
 				if (!optionalMailSender.isPresent())
 					return count;
@@ -101,11 +102,11 @@ public class MailServiceImpl {
 			multiPart.addBodyPart(bodyPart);
 			mineMessage.setContent(multiPart);
 
-			//test
+			// test - to store the mail to the file
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			mineMessage.writeTo(output);
 			try (FileOutputStream fos = new FileOutputStream("D:\\Kafka_Sources\\mail.html")) {
-				fos.write(output.toByteArray ());
+				fos.write(output.toByteArray());
 			}
 
 			status = sendTransport(mineMessage);
@@ -173,8 +174,6 @@ public class MailServiceImpl {
 
 		return true;
 	}
-
-//
 
 	private class PopupAuthenticator extends Authenticator {
 		public PasswordAuthentication getPasswordAuthentication() {

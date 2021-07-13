@@ -30,7 +30,6 @@ public class ConsumerService {
 		log.info("Received Message from kafka : " + message + " and offsets " + offsets + "from partition: " + partition_id);
 		try {
 			log.info("message consuming process started..");
-//			messageQueueIngester.processConsumerMessages(message);
 			routerService.messageRouter(message);
 			log.info("consuming process completed.");
 		} catch (Exception e) {
